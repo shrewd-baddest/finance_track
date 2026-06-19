@@ -1,20 +1,24 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:transaction_tracker/constants/app_colors.dart";
 import "package:transaction_tracker/constants/categories.dart";
+import "package:transaction_tracker/models/transaction_model.dart";
+import "package:transaction_tracker/providers/state_providers.dart";
 import "package:transaction_tracker/widgets/category_widget.dart";
 import "package:transaction_tracker/widgets/dateField.dart";
 import "package:transaction_tracker/widgets/transaction_selector.dart";
 
-class AddTransactions extends StatefulWidget {
+class AddTransactions extends ConsumerStatefulWidget {
   const AddTransactions({super.key});
 
   @override
-  State<AddTransactions> createState() => _AddTransactionsState();
+  ConsumerState<AddTransactions> createState() => _AddTransactionsState();
 }
 
-class _AddTransactionsState extends State<AddTransactions> {
+class _AddTransactionsState extends ConsumerState<AddTransactions> {
   final amountController = TextEditingController();
+  final descriptionController = TextEditingController();
 
   @override
   void dispose() {
@@ -24,6 +28,36 @@ class _AddTransactionsState extends State<AddTransactions> {
 
   @override
   Widget build(BuildContext context) {
+    final transactionDate = ref.watch(dateProvider);
+    final isExpense = ref.watch(expenseProvider);
+    final category = ref.watch(selectedCardProvider);
+
+    ref.listen(
+      transactionNotifier,
+      (((previous, next) => {
+        next.whenOrNull(
+          data: (_) => {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  "you have successfully added transaction",
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                backgroundColor: AppColors.card,
+              ),
+            ),
+          },
+          error: (error, stack) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(error.toString())));
+          },
+        ),
+      })),
+    );
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -71,6 +105,7 @@ class _AddTransactionsState extends State<AddTransactions> {
             ),
             SizedBox(height: 10.0),
             TextField(
+              controller: descriptionController,
               style: const TextStyle(color: Colors.white, fontSize: 18),
               decoration: InputDecoration(
                 hintText: "Uber Eats — Dinner",
@@ -123,6 +158,40 @@ class _AddTransactionsState extends State<AddTransactions> {
             ),
             SizedBox(height: 10.0),
             Datefield(),
+            SizedBox(height: 20.0),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryDark,
+                foregroundColor: AppColors.textPrimary,
+                minimumSize: Size(double.infinity, 50),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+              onPressed: () {
+                TransactionModel transact = TransactionModel(
+                  amount: double.parse(amountController.text),
+                  transaction_type: isExpense ? "expense" : "income",
+                  description: descriptionController.text,
+                  transaction_date: transactionDate,
+                  category: category,
+                );
+                ref
+                    .read(transactionNotifier.notifier)
+                    .addTransactions(transact);
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.check),
+                  SizedBox(height: 10.0),
+                  Text(
+                    "Save Transaction",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

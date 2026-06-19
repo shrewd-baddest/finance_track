@@ -10,9 +10,15 @@ class CategoryWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedCard = ref.watch(selectedCardProvider);
+    final selectCard = ref.watch(selectedCardProvider);
+    final selectedCard = selectCard['name'];
     return GestureDetector(
-      onTap: () => ref.read(selectedCardProvider.notifier).state = name,
+      onTap: () {
+        ref.read(selectedCardProvider.notifier).state = {
+          'name': name,
+          'icon': icon.codePoint,
+        };
+      },
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.card,

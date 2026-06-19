@@ -1,5 +1,5 @@
 class CategoryTable {
-  static final tableName = 'CategoryTable';
+  static final tableName = 'Categories';
 
   static const createTable = '''CREATE TABLE categories (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

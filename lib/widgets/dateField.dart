@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:transaction_tracker/providers/state_providers.dart';
 
-class Datefield extends StatefulWidget {
+class Datefield extends ConsumerStatefulWidget {
   const Datefield({super.key});
 
   @override
-  State<Datefield> createState() => _DatefieldState();
+  ConsumerState<Datefield> createState() => _DatefieldState();
 }
 
-class _DatefieldState extends State<Datefield> {
+class _DatefieldState extends ConsumerState<Datefield> {
   final TextEditingController dateController = TextEditingController();
 
   Future<void> selectedDate() async {
@@ -20,6 +22,7 @@ class _DatefieldState extends State<Datefield> {
     if (pickedDate != null) {
       dateController.text =
           "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
+      ref.read(dateProvider.notifier).state = dateController.text;
     }
   }
 
