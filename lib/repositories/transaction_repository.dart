@@ -15,8 +15,6 @@ class TransactionRepository {
       'type': transact.transaction_type,
     }, conflictAlgorithm: ConflictAlgorithm.replace);
 
-    print(categoryId);
-
     return await db.insert('transactions', {
       'amount': transact.amount,
       'description': transact.description,
@@ -24,5 +22,21 @@ class TransactionRepository {
       'transaction_type': transact.transaction_type,
       'transaction_date': transact.transaction_date,
     }, conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<List<TransactionModel>> getTransaction() async {
+    final db = await database.database;
+
+    final List<Map<String, dynamic>> transactionsList = await db.rawQuery('''
+SELECT t.amount,t.description,t.transaction_type,t.transaction_date,c.name,
+c.icon FROM transactions t INNER JOIN categories c ON c.id=t.category_id     
+
+''');
+    print(transactionsList);
+
+    final transactions = transactionsList
+        .map((trn) => TransactionModel.fromJson(trn))
+        .toList();
+    return transactions;
   }
 }

@@ -25,10 +25,10 @@ class TransactionModel {
 
   factory TransactionModel.fromJson(Map<String, dynamic> json) {
     return TransactionModel(
-      amount: json['amount'],
+      amount: (json['amount'] as num).toDouble(),
       transaction_type: json['transaction_type'],
       description: json['description'],
-      category: json['category'],
+      category: {'name': json['name'], 'icon': json['icon']},
       transaction_date: json['transaction_date'],
     );
   }

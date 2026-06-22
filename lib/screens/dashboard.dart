@@ -1,15 +1,19 @@
 import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:transaction_tracker/constants/app_colors.dart";
+import "package:transaction_tracker/providers/state_providers.dart";
 import "package:transaction_tracker/routes/route_names.dart";
 import "package:transaction_tracker/widgets/card_widget.dart";
 import "package:transaction_tracker/widgets/navigation_card.dart";
 import "package:transaction_tracker/widgets/transaction_widget.dart";
 
-class Dashboard extends StatelessWidget {
+class Dashboard extends ConsumerWidget {
   const Dashboard({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final transactionList = ref.watch(getTransactionNotifier);
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -23,7 +27,7 @@ class Dashboard extends StatelessWidget {
                     style: Theme.of(context).textTheme.labelSmall,
                   ),
                   subtitle: Text(
-                    'Brian',
+                    'onsongo',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   trailing: Icon(Icons.notifications),
@@ -67,38 +71,42 @@ class Dashboard extends StatelessWidget {
                   ).textTheme.bodyMedium?.copyWith(color: AppColors.textMuted),
                 ),
                 SizedBox(height: 10.0),
-                TransactionWidget(
-                  amount: '+120,000',
-                  icon: Icons.account_balance_wallet,
-                  reason: 'Income',
-                  title: 'Monthly Salary',
-                  isIncome: true,
+
+                transactionList.when(
+                  loading: () => const CircularProgressIndicator(),
+
+                  error: (error, stack) {
+                    print(error.toString());
+                    return Text(
+                      error.toString(),
+                      style: const TextStyle(color: Colors.red),
+                    );
+                  },
+
+                  data: (transactions) => ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: transactions.length,
+                    itemBuilder: (context, index) {
+                      final trn = transactions[index];
+
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: TransactionWidget(
+                          amount: trn.amount.toString(),
+                          icon: IconData(
+                            // ignore: non_const_argument_for_const_parameter
+                            int.parse(trn.category['icon'].toString()),
+                            fontFamily: 'MaterialIcons',
+                          ),
+                          reason: trn.description,
+                          title: trn.category['name'],
+                          isIncome: trn.transaction_type == 'income',
+                        ),
+                      );
+                    },
+                  ),
                 ),
-                SizedBox(height: 10.0),
-                TransactionWidget(
-                  amount: '-1,450',
-                  icon: Icons.restaurant,
-                  reason: 'Food',
-                  title: 'Uber Eats',
-                  isIncome: false,
-                ),
-                SizedBox(height: 10.0),
-                TransactionWidget(
-                  amount: '-200',
-                  icon: Icons.directions_bus,
-                  reason: 'Matatu Fare',
-                  title: 'Transport',
-                  isIncome: false,
-                ),
-                SizedBox(height: 10.0),
-                TransactionWidget(
-                  amount: '-4,450',
-                  icon: Icons.shopping_bag,
-                  reason: 'Shopping',
-                  title: 'Naivas Shopping',
-                  isIncome: false,
-                ),
-                SizedBox(height: 20.0),
               ],
             ),
           ),

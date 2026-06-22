@@ -24,7 +24,7 @@ class TransactionWidget extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: AppColors.primaryDeep.withOpacity(0.1),
+          backgroundColor: AppColors.primaryDeep.withValues(alpha: 0.1),
           child: Icon(icon, color: AppColors.primaryDeep),
         ),
         title: Text(title, style: Theme.of(context).textTheme.bodyLarge),

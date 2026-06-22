@@ -15,3 +15,18 @@ class InsertNotifier extends AsyncNotifier<void> {
     });
   }
 }
+
+class getTransaction extends AsyncNotifier<List<TransactionModel>> {
+  @override
+  Future<List<TransactionModel>> build() async {
+    return ref.read(transactionProvider).getTransaction();
+  }
+
+  Future allTransactions() async {
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(
+      () => ref.read(transactionProvider).getTransaction(),
+    );
+  }
+}
