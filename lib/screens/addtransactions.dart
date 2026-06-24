@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:intl/intl.dart";
+import "package:riverpod/src/framework.dart";
 import "package:transaction_tracker/constants/app_colors.dart";
 import "package:transaction_tracker/constants/categories.dart";
 import "package:transaction_tracker/models/transaction_model.dart";
@@ -28,7 +30,10 @@ class _AddTransactionsState extends ConsumerState<AddTransactions> {
 
   @override
   Widget build(BuildContext context) {
-    final transactionDate = ref.watch(dateProvider);
+    final selectedDate = ref.watch(dateProvider);
+
+    final transactionDate = DateFormat('yyyy-MM-dd').format(selectedDate);
+
     final isExpense = ref.watch(expenseProvider);
     final category = ref.watch(selectedCardProvider);
 
@@ -59,6 +64,8 @@ class _AddTransactionsState extends ConsumerState<AddTransactions> {
     );
 
     return Scaffold(
+      appBar: AppBar(title: Center(child: Text('Add transaction'))),
+
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Column(

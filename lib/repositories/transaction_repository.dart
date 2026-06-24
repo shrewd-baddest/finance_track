@@ -32,11 +32,28 @@ SELECT t.amount,t.description,t.transaction_type,t.transaction_date,c.name,
 c.icon FROM transactions t INNER JOIN categories c ON c.id=t.category_id     
 
 ''');
-    print(transactionsList);
 
     final transactions = transactionsList
         .map((trn) => TransactionModel.fromJson(trn))
         .toList();
     return transactions;
+  }
+
+  Future<List<Map<String, dynamic>>> getBarData() async {
+    final db = await database.database;
+
+    final List<Map<String, dynamic>> barData = await db.rawQuery('''
+SELECT 
+    strftime('%m', transaction_date) AS month,
+    SUM(amount) AS total_amount
+FROM transactions
+WHERE strftime('%Y', transaction_date) = strftime('%Y', 'now')
+GROUP BY strftime('%m', transaction_date)
+ORDER BY month;
+
+''');
+    print(await db.query('transactions'));
+    print(barData);
+    return barData;
   }
 }

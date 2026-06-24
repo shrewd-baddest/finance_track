@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:transaction_tracker/providers/state_providers.dart';
 
 class Datefield extends ConsumerStatefulWidget {
@@ -20,9 +21,9 @@ class _DatefieldState extends ConsumerState<Datefield> {
       lastDate: DateTime(2100),
     );
     if (pickedDate != null) {
-      dateController.text =
-          "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
-      ref.read(dateProvider.notifier).state = dateController.text;
+      ref.read(dateProvider.notifier).state = pickedDate;
+
+      dateController.text = DateFormat('d/M/yyyy').format(pickedDate);
     }
   }
 

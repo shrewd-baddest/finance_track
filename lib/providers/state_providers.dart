@@ -10,7 +10,7 @@ final expenseProvider = StateProvider<bool>((ref) => true);
 final selectedCardProvider = StateProvider<Map<String, dynamic>>(
   (ref) => {"name": "food", "icon": Icons.restaurant},
 );
-final dateProvider = StateProvider<String>((ref) => "");
+final dateProvider = StateProvider<DateTime>((ref) => DateTime.now());
 final transactionProvider = Provider<TransactionRepository>(
   (ref) => TransactionRepository(DatabaseService()),
 );
@@ -20,4 +20,14 @@ final transactionNotifier = AsyncNotifierProvider<InsertNotifier, void>(
 final getTransactionNotifier =
     AsyncNotifierProvider<getTransaction, List<TransactionModel>>(
       getTransaction.new,
+    );
+final updateDateNotifier = NotifierProvider<GetDate, DateTime>(GetDate.new);
+
+final totalAmountProvider = NotifierProvider<TotalAmountNotifier, double>(
+  TotalAmountNotifier.new,
+);
+
+final barProvider =
+    AsyncNotifierProvider<getBarData, List<Map<String, dynamic>>>(
+      getBarData.new,
     );
