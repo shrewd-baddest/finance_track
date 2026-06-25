@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:transaction_tracker/models/Currency_conversion.dart';
 import 'package:transaction_tracker/models/transaction_model.dart';
 import 'package:transaction_tracker/providers/state_providers.dart';
 
@@ -75,5 +78,41 @@ class TotalAmountNotifier extends Notifier<double> {
       loading: () => 0.0,
       error: (_, __) => 0.0,
     );
+  }
+}
+
+class CurrencyConvertor extends AsyncNotifier<CurrencyConversion?> {
+  @override
+  CurrencyConversion? build() {
+    return null;
+  }
+
+  Future<void> currency(CurrencyConversion currency) async {
+    state = const AsyncLoading();
+    print(currency.amount);
+    print(currency.fromCurrency);
+    state = await AsyncValue.guard(() async {
+      final response = await http.get(
+        Uri.parse(
+          'https://api.frankfurter.dev/v1/latest'
+          '?base=${currency.fromCurrency}'
+          '&symbols=${currency.toCurrency}',
+        ),
+      );
+
+      final data = jsonDecode(response.body);
+      print(data);
+
+      final rate = (data['rates'][currency.toCurrency] as num).toDouble();
+
+      final convertedAmount = currency.amount * rate;
+
+      return CurrencyConversion(
+        fromCurrency: currency.fromCurrency,
+        toCurrency: currency.toCurrency,
+        amount: currency.amount,
+        convertedAmount: convertedAmount,
+      );
+    });
   }
 }

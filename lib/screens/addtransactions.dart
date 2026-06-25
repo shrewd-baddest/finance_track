@@ -64,142 +64,150 @@ class _AddTransactionsState extends ConsumerState<AddTransactions> {
     );
 
     return Scaffold(
-      appBar: AppBar(title: Center(child: Text('Add transaction'))),
+      appBar: AppBar(
+        title: Center(
+          child: Text(
+            "New Transaction",
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+        ),
+      ),
 
       body: Padding(
         padding: const EdgeInsets.all(15.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "New Transaction",
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            SizedBox(height: 20.0),
-            TransactionSelector(),
-            SizedBox(height: 20.0),
-            Center(
-              child: Column(
-                children: [
-                  Text("KSh (Kenyan Shilling)"),
-                  SizedBox(height: 20.0),
-                  TextField(
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    controller: amountController,
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 20.0),
+              TransactionSelector(),
+              SizedBox(height: 20.0),
+              Center(
+                child: Column(
+                  children: [
+                    Text("KSh (Kenyan Shilling)"),
+                    SizedBox(height: 20.0),
+                    TextField(
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      controller: amountController,
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      textAlign: TextAlign.center, // Centers entered text
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      decoration: const InputDecoration(
+                        hintText: "enter amount",
+                        hintStyle: TextStyle(),
+                        border: InputBorder.none, // Removes underline
+                      ),
                     ),
-                    textAlign: TextAlign.center, // Centers entered text
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    decoration: const InputDecoration(
-                      hintText: "enter amount",
-                      hintStyle: TextStyle(),
-                      border: InputBorder.none, // Removes underline
-                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20.0),
+              Text(
+                "Description",
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(color: AppColors.textMuted),
+              ),
+              SizedBox(height: 10.0),
+              TextField(
+                controller: descriptionController,
+                style: const TextStyle(color: Colors.white, fontSize: 18),
+                decoration: InputDecoration(
+                  hintText: "Uber Eats — Dinner",
+                  hintStyle: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 18,
                   ),
-                ],
-              ),
-            ),
-            SizedBox(height: 20.0),
-            Text(
-              "Description",
-              style: Theme.of(
-                context,
-              ).textTheme.bodyLarge?.copyWith(color: AppColors.textMuted),
-            ),
-            SizedBox(height: 10.0),
-            TextField(
-              controller: descriptionController,
-              style: const TextStyle(color: Colors.white, fontSize: 18),
-              decoration: InputDecoration(
-                hintText: "Uber Eats — Dinner",
-                hintStyle: const TextStyle(color: Colors.white70, fontSize: 18),
-                filled: true,
-                fillColor: const Color(0xFF0F1B36),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 18,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide: const BorderSide(color: Color(0xFF00F5D4)),
+                  filled: true,
+                  fillColor: const Color(0xFF0F1B36),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 18,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: const BorderSide(color: Color(0xFF00F5D4)),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 20.0),
-            Text(
-              "CATEGORY",
-              style: Theme.of(
-                context,
-              ).textTheme.bodyLarge?.copyWith(color: AppColors.shopping),
-            ),
-            SizedBox(height: 10.0),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
-                crossAxisSpacing: 5,
-                mainAxisSpacing: 5,
-                childAspectRatio: 0.7,
+              SizedBox(height: 20.0),
+              Text(
+                "CATEGORY",
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(color: AppColors.shopping),
               ),
-              itemCount: Arrays.categoryList.length,
-              itemBuilder: (BuildContext context, int index) {
-                final category = Arrays.categoryList[index];
+              SizedBox(height: 10.0),
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 5,
+                  childAspectRatio: 0.7,
+                ),
+                itemCount: Arrays.categoryList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final category = Arrays.categoryList[index];
 
-                return CategoryWidget(
-                  icon: category["icon"],
-                  name: category["name"],
-                );
-              },
-            ),
-            SizedBox(height: 20.0),
-            Text(
-              "DATE",
-              style: Theme.of(
-                context,
-              ).textTheme.bodyLarge?.copyWith(color: AppColors.shopping),
-            ),
-            SizedBox(height: 10.0),
-            Datefield(),
-            SizedBox(height: 20.0),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryDark,
-                foregroundColor: AppColors.textPrimary,
-                minimumSize: Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  return CategoryWidget(
+                    icon: category["icon"],
+                    name: category["name"],
+                  );
+                },
+              ),
+              SizedBox(height: 20.0),
+              Text(
+                "DATE",
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(color: AppColors.shopping),
+              ),
+              SizedBox(height: 10.0),
+              Datefield(),
+              SizedBox(height: 20.0),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryDark,
+                  foregroundColor: AppColors.textPrimary,
+                  minimumSize: Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+                onPressed: () {
+                  TransactionModel transact = TransactionModel(
+                    amount: double.parse(amountController.text),
+                    transaction_type: isExpense ? "expense" : "income",
+                    description: descriptionController.text,
+                    transaction_date: transactionDate,
+                    category: category,
+                  );
+                  ref
+                      .read(transactionNotifier.notifier)
+                      .addTransactions(transact);
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.check),
+                    SizedBox(height: 10.0),
+                    Text(
+                      "Save Transaction",
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ],
                 ),
               ),
-              onPressed: () {
-                TransactionModel transact = TransactionModel(
-                  amount: double.parse(amountController.text),
-                  transaction_type: isExpense ? "expense" : "income",
-                  description: descriptionController.text,
-                  transaction_date: transactionDate,
-                  category: category,
-                );
-                ref
-                    .read(transactionNotifier.notifier)
-                    .addTransactions(transact);
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.check),
-                  SizedBox(height: 10.0),
-                  Text(
-                    "Save Transaction",
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
