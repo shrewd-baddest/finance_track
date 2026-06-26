@@ -3,11 +3,13 @@ class CurrencyConversion {
   final String toCurrency;
   final double amount;
   final double? convertedAmount;
+  final double? rate;
 
   CurrencyConversion({
     required this.fromCurrency,
     required this.toCurrency,
     required this.amount,
+    this.rate,
     this.convertedAmount,
   });
 
@@ -25,6 +27,7 @@ class CurrencyConversion {
       toCurrency: json['to_currency'],
       amount: (json['amount'] as num).toDouble(),
       convertedAmount: (json['converted_amount'] as num).toDouble(),
+      rate: (json['rate']).toDouble(),
     );
   }
 }

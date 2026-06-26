@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:core';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -58,11 +59,11 @@ class GetDate extends Notifier<DateTime> {
   }
 
   void previousMonth() {
-    state = DateTime(state.year, state.month + 1, 1);
+    state = DateTime(state.year, state.month - 1, 1);
   }
 
   void nextMonth() {
-    state = DateTime(state.year, state.month - 1, 1);
+    state = DateTime(state.year, state.month + 1, 1);
   }
 }
 
@@ -107,12 +108,29 @@ class CurrencyConvertor extends AsyncNotifier<CurrencyConversion?> {
 
       final convertedAmount = currency.amount * rate;
 
-      return CurrencyConversion(
+      CurrencyConversion currencyData = CurrencyConversion(
         fromCurrency: currency.fromCurrency,
         toCurrency: currency.toCurrency,
         amount: currency.amount,
         convertedAmount: convertedAmount,
+        rate: rate,
       );
+
+      await ref.read(conversionDb).insertData(currencyData);
+      return currencyData;
     });
+  }
+}
+
+class getConversions extends AsyncNotifier<List<CurrencyConversion>> {
+  @override
+  FutureOr<List<CurrencyConversion>> build() {
+    return ref.read(conversionDb).getTodayConversions();
+  }
+
+  Future<void> currencyList() async {
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(ref.read(conversionDb).getTodayConversions);
   }
 }

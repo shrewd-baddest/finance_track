@@ -6,6 +6,7 @@ import 'package:transaction_tracker/database/database_service.dart';
 import 'package:transaction_tracker/models/Currency_conversion.dart';
 import 'package:transaction_tracker/models/transaction_model.dart';
 import 'package:transaction_tracker/providers/notifier_provider.dart';
+import 'package:transaction_tracker/repositories/conversion.dart';
 import 'package:transaction_tracker/repositories/transaction_repository.dart';
 
 final expenseProvider = StateProvider<bool>((ref) => true);
@@ -40,4 +41,12 @@ final currencyAmountProvider = StateProvider<double>((ref) => 0.0);
 final convertedProvider =
     AsyncNotifierProvider<CurrencyConvertor, CurrencyConversion?>(
       CurrencyConvertor.new,
+    );
+final conversionDb = Provider<Conversion>(
+  (ref) => Conversion(database: DatabaseService()),
+);
+
+final getCurrentRate =
+    AsyncNotifierProvider<getConversions, List<CurrencyConversion>>(
+      getConversions.new,
     );
