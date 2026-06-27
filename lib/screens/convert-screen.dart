@@ -32,26 +32,30 @@ class ConvertScreen extends ConsumerWidget {
             SizedBox(height: 10.0),
             FromCurrency(),
             SizedBox(height: 10.0),
-            IconButton(
-              onPressed: conversion.isLoading
-                  ? null
-                  : () async {
-                      CurrencyConversion currency = CurrencyConversion(
-                        fromCurrency: fromCurrency,
-                        toCurrency: toCurrency,
-                        amount: amount,
-                      );
-                      try {
-                        await ref
-                            .read(convertedProvider.notifier)
-                            .currency(currency);
-                      } catch (e) {
-                        ScaffoldMessenger.of(
-                          context,
-                        ).showSnackBar(SnackBar(content: Text(e.toString())));
-                      }
-                    },
-              icon: Icon(Icons.swap_vert_circle, size: 30.0),
+            Center(
+              child: IconButton(
+                iconSize: 25.0,
+                color: AppColors.primaryDark,
+                onPressed: conversion.isLoading
+                    ? null
+                    : () async {
+                        CurrencyConversion currency = CurrencyConversion(
+                          fromCurrency: fromCurrency,
+                          toCurrency: toCurrency,
+                          amount: amount,
+                        );
+                        try {
+                          await ref
+                              .read(convertedProvider.notifier)
+                              .currency(currency);
+                        } catch (e) {
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text(e.toString())));
+                        }
+                      },
+                icon: Icon(Icons.swap_vert_circle, size: 30.0),
+              ),
             ),
             SizedBox(height: 20.0),
             ToCurrency(),

@@ -8,26 +8,31 @@ class RatesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Text(
-        to_currency,
-        style: Theme.of(
-          context,
-        ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
+    return Card(
+      color: AppColors.card,
+      child: ListTile(
+        leading: Text(
+          to_currency,
+          style: Theme.of(
+            context,
+          ).textTheme.labelSmall?.copyWith(color: AppColors.textSecondary),
+        ),
+        title: Text(
+          to_currency,
+          style: Theme.of(
+            context,
+          ).textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
+        ),
+        trailing: Text(
+          rate.toStringAsFixed(5),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: AppColors.primaryDark),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.0),
+        ),
       ),
-      title: Text(
-        to_currency,
-        style: Theme.of(
-          context,
-        ).textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
-      ),
-      trailing: Text(
-        rate as String,
-        style: Theme.of(
-          context,
-        ).textTheme.bodyMedium?.copyWith(color: AppColors.primaryDark),
-      ),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
     );
   }
 }

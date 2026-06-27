@@ -52,8 +52,6 @@ GROUP BY strftime('%m', transaction_date)
 ORDER BY month;
 
 ''');
-    print(await db.query('transactions'));
-    print(barData);
     return barData;
   }
 }

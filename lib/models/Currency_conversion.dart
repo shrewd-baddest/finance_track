@@ -25,9 +25,9 @@ class CurrencyConversion {
     return CurrencyConversion(
       fromCurrency: json['from_currency'],
       toCurrency: json['to_currency'],
-      amount: (json['amount'] as num).toDouble(),
-      convertedAmount: (json['converted_amount'] as num).toDouble(),
-      rate: (json['rate']).toDouble(),
+      amount: (json['from_amount'] as num).toDouble(),
+      convertedAmount: (json['to_amount'] as num).toDouble(),
+      rate: (json['rate_used'] as num).toDouble(),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:transaction_tracker/constants/app_colors.dart';
 import 'package:transaction_tracker/constants/currenct.dart';
+import 'package:transaction_tracker/models/Currency_conversion.dart';
 import 'package:transaction_tracker/providers/state_providers.dart';
 
 class ToCurrency extends ConsumerStatefulWidget {
@@ -13,6 +14,7 @@ class ToCurrency extends ConsumerStatefulWidget {
 
 class _ToCurrencyState extends ConsumerState<ToCurrency> {
   late TextEditingController toField;
+  late ProviderSubscription<AsyncValue<CurrencyConversion?>> subscription;
 
   @override
   void initState() {
@@ -20,7 +22,7 @@ class _ToCurrencyState extends ConsumerState<ToCurrency> {
 
     toField = TextEditingController();
 
-    ref.listenManual(convertedProvider, (previous, next) {
+    subscription = ref.listenManual(convertedProvider, (previous, next) {
       next.whenData((data) {
         toField.text = data?.convertedAmount.toString() ?? '';
       });
@@ -29,6 +31,7 @@ class _ToCurrencyState extends ConsumerState<ToCurrency> {
 
   @override
   void dispose() {
+    subscription.close();
     toField.dispose();
     super.dispose();
   }

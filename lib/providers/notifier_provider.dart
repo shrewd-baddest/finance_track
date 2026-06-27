@@ -90,8 +90,7 @@ class CurrencyConvertor extends AsyncNotifier<CurrencyConversion?> {
 
   Future<void> currency(CurrencyConversion currency) async {
     state = const AsyncLoading();
-    print(currency.amount);
-    print(currency.fromCurrency);
+
     state = await AsyncValue.guard(() async {
       final response = await http.get(
         Uri.parse(
@@ -102,10 +101,8 @@ class CurrencyConvertor extends AsyncNotifier<CurrencyConversion?> {
       );
 
       final data = jsonDecode(response.body);
-      print(data);
 
       final rate = (data['rates'][currency.toCurrency] as num).toDouble();
-
       final convertedAmount = currency.amount * rate;
 
       CurrencyConversion currencyData = CurrencyConversion(
@@ -130,7 +127,7 @@ class getConversions extends AsyncNotifier<List<CurrencyConversion>> {
 
   Future<void> currencyList() async {
     state = const AsyncLoading();
-
+    // await ref.read(conversionDb).migrateDatabase();
     state = await AsyncValue.guard(ref.read(conversionDb).getTodayConversions);
   }
 }
